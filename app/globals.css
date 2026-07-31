@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+:root {
+  --radius: 1rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+
+  --background: #FCF8F2;
+  --foreground: #473128;
+  --card: #FFFFFF;
+  --card-foreground: #473128;
+  --popover: #FFFFFF;
+  --popover-foreground: #473128;
+  --primary: #B96342;
+  --primary-foreground: #FEFCF8;
+  --primary-soft: #F4E6DE;
+  --secondary: #F3EEE3;
+  --secondary-foreground: #684236;
+  --muted: #F4F0E8;
+  --muted-foreground: #81665B;
+  --accent: #F3ECE1;
+  --accent-foreground: #684236;
+  --gold: #CDA864;
+  --gold-foreground: #5A4A2C;
+  --success: #4D9A5E;
+  --success-foreground: #FEFCF8;
+  --destructive: #C2413A;
+  --destructive-foreground: #FEFCF8;
+  --border: #E8DDD0;
+  --input: #E8DDD0;
+  --ring: #B96342;
+  --chart-1: #B96342;
+  --chart-2: #CDA864;
+  --chart-3: #BC7A5D;
+  --chart-4: #4D9A5E;
+  --chart-5: #81665B;
+  --sidebar: #FBF7F0;
+  --sidebar-foreground: #473128;
+  --sidebar-primary: #B96342;
+  --sidebar-primary-foreground: #FEFCF8;
+  --sidebar-accent: #F4E6DE;
+  --sidebar-accent-foreground: #684236;
+  --sidebar-border: #E8DDD0;
+  --sidebar-ring: #B96342;
+  --shadow-soft:
+    0 1px 2px rgba(83, 61, 51, 0.04),
+    0 12px 32px -12px rgba(83, 61, 51, 0.12);
+  --shadow-lifted:
+    0 2px 4px rgba(83, 61, 51, 0.05),
+    0 24px 48px -20px rgba(83, 61, 51, 0.22);
+
+
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-gold: var(--gold);
+  --color-gold-foreground: var(--gold-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius */
+  --radius: var(--radius);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Shadows */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lifted: var(--shadow-lifted);
+
+  /* Fonts */
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@utility gold-rule {
+  height: 1px;
+  width: 4rem;
+  background: linear-gradient(to right,
+      transparent,
+      var(--gold),
+      transparent);
+}
+
+@utility surface-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+}
