@@ -134,7 +134,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-@utility gold-rule {
+.gold-rule {
   height: 1px;
   width: 4rem;
   background: linear-gradient(to right,
@@ -143,7 +143,7 @@ body {
       transparent);
 }
 
-@utility surface-card {
+.surface-card {
   background-color: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
