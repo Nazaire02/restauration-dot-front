@@ -6,14 +6,18 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Armchair, Utensils } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { FormValues, schema } from './schema';
+import { useGuestStore } from '@/store/useGuestStore';
 
 function PositionForm() {
+    const setSeat = useGuestStore((s) => s.setSeat);
     const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({
         resolver: zodResolver(schema),
         defaultValues: { table: "" as unknown as number, chair: "" as unknown as number },
     });
 
     const onSubmit = async (data: FormValues) => {
+        const parsed = schema.parse(data);
+        setSeat({ table: parsed.table, chair: parsed.chair });
         console.log(data);
     }
 
