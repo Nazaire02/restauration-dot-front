@@ -63,7 +63,7 @@ export function OrderConfirmation({ table, chair, onDone }: Readonly<OrderConfir
           onClick={onDone}
           className="mt-8 inline-flex min-h-11 items-center rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
         >
-          Suivre ma commande
+          Retour au menu
         </button>
       </motion.div>
     </motion.div>

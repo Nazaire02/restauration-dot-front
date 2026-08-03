@@ -11,6 +11,7 @@ import { useDataStore } from "@/store/useDataStore";
 import { DishCard } from "@/features/guess/components/DishCard";
 import { OrderConfirmation } from "@/features/guess/components/OrderConfirmation";
 import { OrderReviewModal } from "@/features/guess/components/OrderReviewModal";
+import { SeatEditorCard } from "@/features/guess/components/SeatEditorCard";
 
 export default function MenuView() {
   const seat = useGuestStore((s) => s.seat);
@@ -36,15 +37,21 @@ export default function MenuView() {
     setConfirmed(true);
   };
 
+  const handleCancel = () => {
+    clear();
+    setReviewOpen(false);
+  };
+
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:flex-nowrap">
         <PageHeader
-          eyebrow={seat ? `Table ${seat.table} · chaise ${seat.chair}` : undefined}
           title="Le menu"
           description="Composez votre assiette. Notre équipe prépare et sert directement à votre place."
         />
       </div>
+
+      <SeatEditorCard />
 
       {dishes.length === 0 ? (
         <div className="mt-8">
@@ -77,7 +84,7 @@ export default function MenuView() {
             table={seat.table}
             chair={seat.chair}
             items={items}
-            onCancel={() => setReviewOpen(false)}
+            onCancel={handleCancel}
             onConfirm={handleConfirm}
           />
         ) : null}
