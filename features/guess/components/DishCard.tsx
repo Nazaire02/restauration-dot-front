@@ -43,7 +43,7 @@ export function DishCard({ dish, quantity, onAdd }: Readonly<DishCardProps>) {
           aria-label={`Ajouter ${dish.name} au panier`}
         >
           <Plus className="size-4" aria-hidden />
-          <span>{dish.available ? "Ajouter" : "Indisponible"}</span>
+          <span>{dish.available ? "Commander" : "Indisponible"}</span>
         </Button>
       </div>
     </motion.article>

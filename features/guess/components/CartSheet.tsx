@@ -47,9 +47,13 @@ export function CartSheet({ onValidate, open, onOpenChange }: Readonly<CartSheet
         <SheetHeader>
           <SheetTitle className="text-display text-2xl">Votre commande</SheetTitle>
           <SheetDescription>
-            {count > 0
-              ? `${count} ${pluralize(count, "article")} sélectionné${count > 1 ? "s" : ""}.`
-              : "Votre panier est vide pour le moment."}
+            {count > 0 ? (
+              <>
+                {count} {pluralize(count, "article")} sélectionné{count > 1 ? "s" : ""}.
+              </>
+            ) : (
+              "Votre panier est vide pour le moment."
+            )}
           </SheetDescription>
         </SheetHeader>
 
