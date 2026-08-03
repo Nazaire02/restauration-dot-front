@@ -2,14 +2,14 @@ import { motion } from "motion/react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dish } from "@/type";
+import Image from "next/image";
 
 interface DishCardProps {
   dish: Dish;
-  quantity: number;
   onAdd: (dish: Dish) => void;
 }
 
-export function DishCard({ dish, quantity, onAdd }: Readonly<DishCardProps>) {
+export function DishCard({ dish, onAdd }: Readonly<DishCardProps>) {
   return (
     <motion.article
       variants={{
@@ -20,10 +20,9 @@ export function DishCard({ dish, quantity, onAdd }: Readonly<DishCardProps>) {
       className="surface-card flex flex-col overflow-hidden"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-secondary">
-        <img
+        <Image
           src={dish.image}
           alt={dish.name}
-          loading="lazy"
           width={800}
           height={800}
           className="size-full object-cover transition-transform duration-500 hover:scale-105"

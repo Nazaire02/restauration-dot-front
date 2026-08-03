@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Armchair, Check, PencilLine, Utensils, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,13 +14,6 @@ export function SeatEditorCard() {
   const [isEditing, setIsEditing] = useState(false);
   const [table, setTable] = useState(seat?.table ?? 1);
   const [chair, setChair] = useState(seat?.chair ?? 1);
-
-  useEffect(() => {
-    if (seat) {
-      setTable(seat.table);
-      setChair(seat.chair);
-    }
-  }, [seat]);
 
   const handleSave = () => {
     const nextTable = Math.min(

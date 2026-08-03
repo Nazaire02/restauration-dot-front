@@ -68,7 +68,6 @@ export default function MenuView() {
             <DishCard
               key={dish.id}
               dish={dish}
-              quantity={1}
               onAdd={(d) => {
                 add(d);
                 setReviewOpen(true);
