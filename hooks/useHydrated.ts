@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
 
 /** True once the client has hydrated — gate persisted (localStorage) state on it. */
 export function useHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(false);
-
-  if (typeof window !== "undefined") {
-    setHydrated(true);
-  }
-  return hydrated;
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,  // client
+    () => false, // server
+  );
 }
