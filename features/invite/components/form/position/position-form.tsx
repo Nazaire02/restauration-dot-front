@@ -1,3 +1,5 @@
+
+
 import { Reveal } from '@/components/common/Reveal'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,8 +9,10 @@ import { Armchair, Utensils } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { FormValues, schema } from './schema';
 import { useGuestStore } from '@/store/useGuestStore';
+import { useRouter } from 'next/navigation';
 
 function PositionForm() {
+    const router = useRouter();
     const setSeat = useGuestStore((s) => s.setSeat);
     const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({
         resolver: zodResolver(schema),
@@ -19,6 +23,7 @@ function PositionForm() {
         const parsed = schema.parse(data);
         setSeat({ table: parsed.table, chair: parsed.chair });
         console.log(data);
+        router.push('invite/menu');
     }
 
     return (
