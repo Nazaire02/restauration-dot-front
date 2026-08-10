@@ -1,3 +1,4 @@
+"use client";
 import { useEffect } from "react";
 import { useDataStore } from "@/store/useDataStore";
 import { realtimeClient } from "@/mock-data/realtime.mock";
