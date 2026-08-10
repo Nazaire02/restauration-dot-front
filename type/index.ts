@@ -17,7 +17,6 @@ export interface Dish {
   id: string;
   name: string;
   description: string;
-  categoryId: string;
   image: string;
   available: boolean;
 }

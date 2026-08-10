@@ -82,7 +82,6 @@ export const useDataStore = create<DataState>()((set, get) => ({
   removeCategory: (id) =>
     set((state) => ({
       categories: state.categories.filter((c) => c.id !== id),
-      dishes: state.dishes.filter((d) => d.categoryId !== id),
     })),
 
   addWaitress: (waitress) =>
