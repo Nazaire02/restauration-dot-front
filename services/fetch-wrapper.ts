@@ -1,13 +1,15 @@
+import { clearSession, getAuthToken } from "@/features/connexion/store/useUserStore";
 import { handleError } from "./error-handler";
 
 export interface RequestOptions {
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
     body?: Record<string, unknown> | FormData;
-    token?: string;
+    token?: string | null;
     headers?: HeadersInit;
     isFormData?: boolean;
-    retry?: boolean;
     isRevalidate?: boolean;
+    skipAuth?: boolean;
+    signal?: AbortSignal;
 }
 
 interface NextRequestInit extends RequestInit {
@@ -16,36 +18,37 @@ interface NextRequestInit extends RequestInit {
     };
 }
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "";
 
-let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
-
-const subscribeTokenRefresh = (cb: (token: string) => void) => {
-    refreshSubscribers.push(cb);
-};
-
-const onRefreshed = (token: string) => {
-    refreshSubscribers.forEach((cb) => cb(token));
-    refreshSubscribers = [];
-};
+function buildUrl(remainUrl: string) {
+    const base = backendUrl.endsWith("/") ? backendUrl.slice(0, -1) : backendUrl;
+    const path = remainUrl.startsWith("/") ? remainUrl.slice(1) : remainUrl;
+    return `${base}/${path}`;
+}
 
 export async function fetchWrapper<T>(remainUrl: string, options: RequestOptions = {}): Promise<T> {
-    let tokens = "getTokens()";
     const {
         method = "GET",
         body,
+        token,
         headers,
         isFormData = false,
         isRevalidate = false,
+        skipAuth = false,
+        signal,
     } = options;
+
+    const accessToken = skipAuth ? null : token ?? getAuthToken();
+    const requestHeaders = new Headers(headers);
+
+    if (accessToken) {
+        requestHeaders.set("Authorization", `Bearer ${accessToken}`);
+    }
 
     const fetchOptions: NextRequestInit = {
         method,
-        headers: {
-            // ...(tokens?.access && { Authorization: `Bearer ${tokens.access}` }),
-            ...headers
-        },
+        headers: requestHeaders,
+        signal,
     };
 
     if (isRevalidate) {
@@ -56,21 +59,29 @@ export async function fetchWrapper<T>(remainUrl: string, options: RequestOptions
     if (body) {
         if (isFormData && body instanceof FormData) {
             fetchOptions.body = body;
-        } else if (typeof body === 'object') {
-            fetchOptions.headers = {
-                "Content-Type": "application/json",
-                ...fetchOptions.headers,
-            };
+        } else {
+            requestHeaders.set("Content-Type", "application/json");
             fetchOptions.body = JSON.stringify(body);
         }
     }
 
-    let response = await fetch(`${backendUrl}${remainUrl}`, fetchOptions);
-    const status = response.status;
+    const response = await fetch(buildUrl(remainUrl), fetchOptions);
 
     if (!response.ok) {
-        const errorBody = await response.json();
-        throw handleError(errorBody.error, status, errorBody.message);
+        if (response.status === 401 && accessToken) {
+            clearSession();
+        }
+        const errorBody = await response.json().catch(() => null);
+        throw handleError(
+            errorBody?.error ?? response.statusText,
+            response.status,
+            errorBody?.message ?? errorBody?.details ?? response.statusText,
+        );
     }
-    return response.json();
+
+    if (response.status === 204) {
+        return undefined as T;
+    }
+
+    return response.json() as Promise<T>;
 }

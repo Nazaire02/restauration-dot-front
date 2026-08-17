@@ -13,34 +13,38 @@ import {
   FormMessage,
 } from "../../../../../components/ui/form";
 import { Input } from "../../../../../components/ui/input";
-import { useGuestStore } from "../../../../../store/useGuestStore";
-import { useSessionStore } from "../../../../../store/useSessionStore";
 import { FormValues, schema } from "./schema";
+import { login } from "@/features/connexion/services/connexion-services";
+import { useUserStore } from "@/features/connexion/store/useUserStore";
+import { isErrorResponse } from "@/services/error-handler";
+import { Role } from "@/type";
 
 interface LoginFormProps {
-  onSuccess?: (role: "admin" | "serveuse") => void;
-  onError?: (message: string) => void;
+  onSuccess?: (role: Role) => void;
+  onError?: (message: string | null) => void;
 }
 
 export function LoginForm({ onSuccess, onError }: Readonly<LoginFormProps>) {
-  const login = useSessionStore((s) => s.login);
-  const setSeat = useGuestStore((s) => s.setSeat);
+  const setSession = useUserStore((s) => s.setSession);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (values: FormValues) => {
-    const user = login(values.email, values.password);
-
-    if (!user) {
-      onError?.("Identifiants incorrects.");
-      return;
+  const onSubmit = async (values: FormValues) => {
+    onError?.(null);
+    try {
+      const session = await login(values);
+      setSession(session);
+      onSuccess?.(session.user.role);
+    } catch (error) {
+      onError?.(
+        isErrorResponse(error)
+          ? error.details
+          : "Connexion impossible. Veuillez réessayer.",
+      );
     }
-
-    setSeat({ table: 1, chair: 1 });
-    onSuccess?.(user.role);
   };
 
   return (
@@ -91,8 +95,12 @@ export function LoginForm({ onSuccess, onError }: Readonly<LoginFormProps>) {
           )}
         />
 
-        <Button type="submit" className="min-h-12 w-full rounded-full">
-          Se connecter
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="min-h-12 w-full rounded-full"
+        >
+          {form.formState.isSubmitting ? "Connexion..." : "Se connecter"}
           <ArrowRight className="size-4" aria-hidden />
         </Button>
       </form>
