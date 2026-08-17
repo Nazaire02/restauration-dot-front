@@ -7,19 +7,18 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { useGuestStore } from "@/store/useGuestStore";
 import { useCartStore } from "@/store/useCartStore";
-import { useDataStore } from "@/store/useDataStore";
 import { DishCard } from "@/features/guess/components/DishCard";
 import { OrderConfirmation } from "@/features/guess/components/OrderConfirmation";
 import { OrderReviewModal } from "@/features/guess/components/OrderReviewModal";
 import { SeatEditorCard } from "@/features/guess/components/SeatEditorCard";
+import { addOrder, fetchMenu } from "../services/guess-services";
+import { toast } from "react-toastify";
+import { isErrorResponse } from "@/services/error-handler"
+import { ErrorState } from "@/components/common/ErrorState";
+import { LoadingState } from "@/components/common/LoadingState";
 
 export default function MenuView() {
   const seat = useGuestStore((s) => s.seat);
-  const setActiveOrderId = useGuestStore((s) => s.setActiveOrderId);
-
-  const dishes = useDataStore((s) => s.dishes);
-  const createOrder = useDataStore((s) => s.createOrder);
-
   const items = useCartStore((s) => s.items);
   const add = useCartStore((s) => s.add);
   const clear = useCartStore((s) => s.clear);
@@ -27,20 +26,37 @@ export default function MenuView() {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!seat || items.length === 0) return;
 
-    const order = createOrder({ table: seat.table, chair: seat.chair, items });
-    setActiveOrderId(order.id);
-    clear();
-    setReviewOpen(false);
-    setConfirmed(true);
+    try {
+      await addOrder({ table: seat.table, chair: seat.chair, items });
+      setConfirmed(true);
+    } catch (error: unknown) {
+      const message = isErrorResponse(error)
+        ? error.details
+        : "Une erreur est survenue.";
+      toast.error(message);
+    } finally {
+      clear();
+      setReviewOpen(false);
+    }
   };
 
   const handleCancel = () => {
     clear();
     setReviewOpen(false);
   };
+
+  const { data: responseMenu, error: errorMenu, loading: loadingMenu } = fetchMenu()
+
+  if (errorMenu) {
+    return <ErrorState/>
+  }
+
+  if(loadingMenu){
+    return <LoadingState title="Chargement" description="Chargement des plats en cours"/>
+  }
 
   return (
     <div>
@@ -53,7 +69,7 @@ export default function MenuView() {
 
       <SeatEditorCard />
 
-      {dishes.length === 0 ? (
+      {responseMenu?.length === 0 ? (
         <div className="mt-8">
           <EmptyState icon={UtensilsCrossed} title="Aucun plat dans cette catégorie" />
         </div>
@@ -64,7 +80,7 @@ export default function MenuView() {
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
           className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {dishes.map((dish) => (
+          {responseMenu?.map((dish) => (
             <DishCard
               key={dish.id}
               dish={dish}

@@ -70,7 +70,7 @@ export async function fetchWrapper<T>(remainUrl: string, options: RequestOptions
 
     if (!response.ok) {
         const errorBody = await response.json();
-        throw handleError(errorBody.error, status, errorBody);
+        throw handleError(errorBody.error, status, errorBody.message);
     }
     return response.json();
 }
