@@ -4,6 +4,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Menu } from "@/features/guess/types/menu";
 
 type Dish = {
   id: string;
@@ -14,7 +15,7 @@ type Dish = {
 };
 
 type DishListProps = {
-  dishes: Dish[];
+  dishes: Menu[];
   onUpdate: (id: string, data: Partial<Pick<Dish, "available">>) => void;
   onRemove: (id: string) => void;
 };
