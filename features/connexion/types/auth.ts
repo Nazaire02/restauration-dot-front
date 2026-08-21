@@ -7,5 +7,5 @@ export type Credentials = {
 
 export type Session = {
   user: SessionUser;
-  token: string;
+  token?: string | null;
 };

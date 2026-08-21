@@ -5,14 +5,18 @@ import { GoldRule } from "@/components/common/GoldRule";
 import { weddingConfig } from "@/lib/wedding-config";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { clearSession, getCurrentUser } from "@/features/connexion/store/useUserStore";
+import { useHydrated } from "@/hooks/useHydrated";
 
 interface GuestLayoutProps {
   children: ReactNode;
   aside?: ReactNode;
 }
 
-export default function GuestLayout({ children, aside }: Readonly<GuestLayoutProps>) {
+export default function AdminLayout({ children, aside }: Readonly<GuestLayoutProps>) {
+  const router = useRouter()
+  const currentUser = getCurrentUser()
   const pathname = usePathname();
   const navItems = [
     { label: "Tableau de bord", to: "/admin" },
@@ -20,6 +24,12 @@ export default function GuestLayout({ children, aside }: Readonly<GuestLayoutPro
     { label: "Serveuses", to: "/admin/serveuses" },
     { label: "Menu", to: "/admin/menu" },
   ];
+
+  if (currentUser?.role != "admin") {
+    clearSession();
+    return router.replace("/")
+  }
+    
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 border-b border-border/70 bg-background/85 backdrop-blur">

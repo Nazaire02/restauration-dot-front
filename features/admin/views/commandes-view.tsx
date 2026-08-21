@@ -7,16 +7,26 @@ import { useDataStore } from "@/store/useDataStore";
 import { useHydrated } from "@/hooks/useHydrated";
 import { OrdersFilters } from "../components/commandes/order-filters";
 import { OrdersTable } from "../components/commandes/orders-table";
+import { fetchTables } from "../services/table-and-chair-services";
+import { ErrorState } from "@/components/common/ErrorState";
+import { fetchWaitresses } from "../services/waitress-services";
+import { fetchCommandes } from "../services/commande-services";
 
 export default function CommandesView() {
   const hydrated = useHydrated();
-  const { ready } = useRoleGuard("admin");
   const orders = useDataStore((s) => s.orders);
-  const waitresses = useDataStore((s) => s.waitresses);
 
   const [table, setTable] = useState("all");
   const [waitress, setWaitress] = useState("all");
   const [status, setStatus] = useState("all");
+
+  const {data: responseTables, error: errorTables} = fetchTables();
+  const {data: responseWaitresses, error: errorWaitresses} = fetchWaitresses();
+  const {data: responseOrders, error: errorOrders} = fetchCommandes({table, waitressId: waitress, status});
+
+  if (errorTables || errorWaitresses) {
+    return <ErrorState />
+  }
 
   if (!hydrated) {
     return (
@@ -26,7 +36,8 @@ export default function CommandesView() {
     );
   }
 
-  const tables = [...new Set(orders.map((o) => o.table))].sort((a, b) => a - b);
+  const tables = responseTables?.map(tab => tab.number) ?? [];
+  console.log(tables, "tab")
 
   const rows = orders
     .filter((o) => table === "all" || String(o.table) === table)
@@ -43,13 +54,13 @@ export default function CommandesView() {
         waitress={waitress}
         status={status}
         tables={tables}
-        waitresses={waitresses}
+        waitresses={responseWaitresses || []}
         onTableChange={setTable}
         onWaitressChange={setWaitress}
         onStatusChange={setStatus}
       />
 
-      <OrdersTable orders={rows} waitresses={waitresses} />
+      <OrdersTable orders={responseOrders || []} waitresses={responseWaitresses || []} />
     </div>
   );
 }

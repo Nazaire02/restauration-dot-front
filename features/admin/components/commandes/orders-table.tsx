@@ -10,8 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatTime } from "@/utils/format";
-import { Waitress } from "../../types/order";
-import { Order } from "@/type";
+import { Order, Waitress } from "../../types/order";
 
 export type OrdersTableProps = {
   orders: Order[];
@@ -33,8 +32,8 @@ export function OrdersTable({ orders, waitresses }: Readonly<OrdersTableProps>) 
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.id}>
+          {orders.map((order, index) => (
+            <TableRow key={index + 1}>
               <TableCell>{formatTime(order.createdAt)}</TableCell>
               <TableCell>{order.table}</TableCell>
               <TableCell>{order.chair}</TableCell>
@@ -42,7 +41,7 @@ export function OrdersTable({ orders, waitresses }: Readonly<OrdersTableProps>) 
                 {order.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")}
               </TableCell>
               <TableCell>
-                {waitresses.find((w) => w.id === order.waitressId)?.name ?? "—"}
+                {/* {waitresses.find((w) => w.id === order.waitressId)?.name ?? "—"} */} -
               </TableCell>
               <TableCell>
                 <StatusBadge status={order.status} />

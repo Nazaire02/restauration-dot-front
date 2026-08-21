@@ -48,6 +48,7 @@ export async function fetchWrapper<T>(remainUrl: string, options: RequestOptions
     const fetchOptions: NextRequestInit = {
         method,
         headers: requestHeaders,
+        credentials: "include",
         signal,
     };
 
@@ -68,7 +69,7 @@ export async function fetchWrapper<T>(remainUrl: string, options: RequestOptions
     const response = await fetch(buildUrl(remainUrl), fetchOptions);
 
     if (!response.ok) {
-        if (response.status === 401 && accessToken) {
+        if (response.status === 401 && !skipAuth) {
             clearSession();
         }
         const errorBody = await response.json().catch(() => null);

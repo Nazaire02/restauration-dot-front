@@ -9,11 +9,8 @@ import {
 } from "@/components/ui/select";
 import { statusLabels } from "@/utils/format";
 import type { OrderStatus } from "@/type";
+import { Waitress } from "../../types/order";
 
-type Waitress = {
-  id: string;
-  name: string;
-};
 
 type OrdersFiltersProps = {
   table: string;
@@ -35,7 +32,7 @@ export function OrdersFilters({
   onTableChange,
   onWaitressChange,
   onStatusChange,
-}: OrdersFiltersProps) {
+}: Readonly<OrdersFiltersProps>) {
   return (
     <div className="flex flex-wrap gap-3">
       <Select value={table} onValueChange={onTableChange}>
@@ -60,7 +57,7 @@ export function OrdersFilters({
           <SelectItem value="all">Toutes les serveuses</SelectItem>
           {waitresses.map((w) => (
             <SelectItem key={w.id} value={w.id}>
-              {w.name}
+              {w.user.name}
             </SelectItem>
           ))}
         </SelectContent>

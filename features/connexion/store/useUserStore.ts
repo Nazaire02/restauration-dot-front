@@ -26,7 +26,7 @@ export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       ...initialState,
-      setSession: ({ user, token }) => set({ user, token }),
+      setSession: ({ user, token }) => set({ user, token: token ?? null }),
       setUser: (user) => set({ user }),
       setToken: (token) => set({ token }),
       logout: () => set({ ...initialState }),

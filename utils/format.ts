@@ -1,4 +1,4 @@
-export function formatTime(timestamp: number): string {
+export function formatTime(timestamp: string): string {
   return new Intl.DateTimeFormat("fr-FR", {
     hour: "2-digit",
     minute: "2-digit",
