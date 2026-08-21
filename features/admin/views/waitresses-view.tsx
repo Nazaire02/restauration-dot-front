@@ -1,17 +1,21 @@
 "use client";
 
 import { PageHeader } from "@/components/common/PageHeader";
-import { useRoleGuard } from "@/features/serveuse/hooks/useRoleGuard";
 import { useDataStore } from "@/store/useDataStore";
 import { WaitressForm } from "../components/waitresses/forms/waitress-form";
 import { WaitressList } from "../components/waitresses/waitress-list";
+import { fetchWaitresses } from "../services/waitress-services";
+import { ErrorState } from "@/components/common/ErrorState";
 
 export default function WaitressesView() {
-  const { ready } = useRoleGuard("admin");
-  const waitresses = useDataStore((s) => s.waitresses);
   const addWaitress = useDataStore((s) => s.addWaitress);
   const updateWaitress = useDataStore((s) => s.updateWaitress);
   const removeWaitress = useDataStore((s) => s.removeWaitress);
+
+  const {data: responseWaitresses, error: errorWaitresses} = fetchWaitresses();
+    if (errorWaitresses) {
+      return <ErrorState/>
+    }
 
   return (
     <div className="space-y-6">
@@ -20,7 +24,7 @@ export default function WaitressesView() {
       <WaitressForm onSubmit={addWaitress} />
 
       <WaitressList
-        waitresses={waitresses}
+        waitresses={responseWaitresses || []}
         onUpdate={updateWaitress}
         onRemove={removeWaitress}
       />

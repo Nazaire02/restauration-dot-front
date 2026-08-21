@@ -1,8 +1,11 @@
 
 export type Waitress = {
   id: string;
+  tables: number[]
   user: {
-    name: string
+    name: string;
+    email: string;
+    online: boolean
   }
 };
 

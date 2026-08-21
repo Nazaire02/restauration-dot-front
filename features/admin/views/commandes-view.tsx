@@ -24,7 +24,7 @@ export default function CommandesView() {
   const {data: responseWaitresses, error: errorWaitresses} = fetchWaitresses();
   const {data: responseOrders, error: errorOrders} = fetchCommandes({table, waitressId: waitress, status});
 
-  if (errorTables || errorWaitresses) {
+  if (errorTables || errorWaitresses || errorOrders) {
     return <ErrorState />
   }
 

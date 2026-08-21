@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Waitress } from "../../types/order";
 
 const parseTables = (value: string) =>
   value
@@ -12,17 +13,9 @@ const parseTables = (value: string) =>
     .map((v) => Number(v.trim()))
     .filter((v) => Number.isInteger(v) && v > 0);
 
-type Waitress = {
-  id: string;
-  name: string;
-  email: string;
-  tables: number[];
-  online: boolean;
-};
-
 type WaitressListProps = {
   waitresses: Waitress[];
-  onUpdate: (id: string, data: Partial<Pick<Waitress, "tables" | "online">>) => void;
+  onUpdate: (id: string, data: Waitress) => void;
   onRemove: (id: string) => void;
 };
 
@@ -30,7 +23,7 @@ export function WaitressList({
   waitresses,
   onUpdate,
   onRemove,
-}: WaitressListProps) {
+}: Readonly<WaitressListProps>) {
   return (
     <ul className="grid gap-4 md:grid-cols-2">
       {waitresses.map((w) => (
@@ -38,15 +31,15 @@ export function WaitressList({
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
             <div className="min-w-0">
               <p className="text-display truncate text-xl text-foreground">
-                {w.name}
+                {w.user.name}
               </p>
-              <p className="truncate text-sm text-muted-foreground">{w.email}</p>
+              <p className="truncate text-sm text-muted-foreground">{w.user.email}</p>
             </div>
             <Button
               size="icon"
               variant="ghost"
               className="min-h-11 min-w-11 shrink-0"
-              aria-label={`Supprimer ${w.name}`}
+              aria-label={`Supprimer ${w.user.name}`}
               onClick={() => onRemove(w.id)}
             >
               <Trash2 className="size-4" aria-hidden />
@@ -60,7 +53,10 @@ export function WaitressList({
               defaultValue={w.tables.join(", ")}
               className="min-h-11"
               onBlur={(e) =>
-                onUpdate(w.id, { tables: parseTables(e.target.value) })
+                onUpdate(w.id, {
+                  ...w,
+                  tables: parseTables(e.target.value),
+                })
               }
             />
           </div>
@@ -68,8 +64,8 @@ export function WaitressList({
           <div className="mt-4 flex items-center gap-3">
             <Switch
               id={`online-${w.id}`}
-              checked={w.online}
-              onCheckedChange={(online) => onUpdate(w.id, { online })}
+              checked={w.user.online}
+              onCheckedChange={(online) => console.log(online)}
             />
             <Label htmlFor={`online-${w.id}`}>En service</Label>
           </div>

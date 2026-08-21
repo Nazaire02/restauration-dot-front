@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WaitressFormValues, waitressSchema } from "./schema";
+import { addWaitress } from "@/features/admin/services/waitress-services";
+import { toast } from "react-toastify";
 
 const parseTables = (value: string) =>
   value
@@ -30,15 +32,22 @@ export function WaitressForm({ onSubmit }: Readonly<WaitressFormProps>) {
       name: "",
       email: "",
       tables: "",
+      password: ""
     },
   });
 
-  const onValid = (values: WaitressFormValues) => {
-    onSubmit({
-      name: values.name,
-      email: values.email,
-      tables: parseTables(values.tables ?? ""),
-    });
+  const onValid = async (values: WaitressFormValues) => {
+    try {
+      await addWaitress({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        tables: parseTables(values.tables ?? ""),
+      })
+      toast.success("Serveur ajouté avec succès")
+    } catch {
+      toast.error("Une erreur s'est produite")
+    }
     reset();
   };
 
@@ -72,6 +81,19 @@ export function WaitressForm({ onSubmit }: Readonly<WaitressFormProps>) {
         />
         {errors.email && (
           <p className="text-sm text-destructive">{errors.email.message}</p>
+        )}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="w-password">Password</Label>
+        <Input
+          id="w-password"
+          type="password"
+          className="min-h-11"
+          aria-invalid={!!errors.password}
+          {...register("password")}
+        />
+        {errors.password && (
+          <p className="text-sm text-destructive">{errors.password.message}</p>
         )}
       </div>
 
