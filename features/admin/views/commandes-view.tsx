@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
-import { useRoleGuard } from "@/features/serveuse/hooks/useRoleGuard";
-import { useDataStore } from "@/store/useDataStore";
 import { useHydrated } from "@/hooks/useHydrated";
 import { OrdersFilters } from "../components/commandes/order-filters";
 import { OrdersTable } from "../components/commandes/orders-table";
@@ -14,7 +12,6 @@ import { fetchCommandes } from "../services/commande-services";
 
 export default function CommandesView() {
   const hydrated = useHydrated();
-  const orders = useDataStore((s) => s.orders);
 
   const [table, setTable] = useState("all");
   const [waitress, setWaitress] = useState("all");
@@ -37,13 +34,6 @@ export default function CommandesView() {
   }
 
   const tables = responseTables?.map(tab => tab.number) ?? [];
-  console.log(tables, "tab")
-
-  const rows = orders
-    .filter((o) => table === "all" || String(o.table) === table)
-    .filter((o) => waitress === "all" || o.waitressId === waitress)
-    .filter((o) => status === "all" || o.status === status)
-    .sort((a, b) => b.createdAt - a.createdAt);
 
   return (
     <div className="space-y-6">

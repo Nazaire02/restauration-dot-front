@@ -1,4 +1,4 @@
-import { Order } from "@/type";
+import { Order } from "@/features/admin/types/order";
 
 const minutesAgo = (m: number) => Date.now() - m * 60_000;
 
@@ -12,8 +12,7 @@ export const initialOrders: Order[] = [
       { dishId: "d8", name: "Bissap glacé à la menthe", quantity: 2 },
     ],
     status: "en_attente",
-    createdAt: minutesAgo(4),
-    waitressId: null,
+    createdAt: ""
   },
   {
     id: "o2",
@@ -21,8 +20,7 @@ export const initialOrders: Order[] = [
     chair: 1,
     items: [{ dishId: "d2", name: "Riz jollof aux gambas", quantity: 1 }],
     status: "en_cours",
-    createdAt: minutesAgo(11),
-    waitressId: "w1",
+    createdAt: ""
   },
   {
     id: "o3",
@@ -33,8 +31,7 @@ export const initialOrders: Order[] = [
       { dishId: "d3", name: "Sauce arachide & agneau", quantity: 1 },
     ],
     status: "en_attente",
-    createdAt: minutesAgo(2),
-    waitressId: null,
+    createdAt: ""
   },
   {
     id: "o4",
@@ -42,8 +39,7 @@ export const initialOrders: Order[] = [
     chair: 2,
     items: [{ dishId: "d7", name: "Panna cotta coco & mangue", quantity: 3 }],
     status: "servie",
-    createdAt: minutesAgo(38),
-    waitressId: "w3",
+    createdAt: ""
   },
   {
     id: "o5",
@@ -51,7 +47,6 @@ export const initialOrders: Order[] = [
     chair: 7,
     items: [{ dishId: "d5", name: "Petits feuilletés croustillants", quantity: 2 }],
     status: "servie",
-    createdAt: minutesAgo(52),
-    waitressId: "w1",
+     createdAt: ""
   },
 ];

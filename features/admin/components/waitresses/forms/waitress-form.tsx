@@ -10,17 +10,13 @@ import { WaitressFormValues, waitressSchema } from "./schema";
 import { addWaitress } from "@/features/admin/services/waitress-services";
 import { toast } from "react-toastify";
 
-const parseTables = (value: string) =>
+export const parseTables = (value: string) =>
   value
     .split(",")
     .map((v) => Number(v.trim()))
     .filter((v) => Number.isInteger(v) && v > 0);
 
-type WaitressFormProps = {
-  onSubmit: (data: { name: string; email: string; tables: number[] }) => void;
-};
-
-export function WaitressForm({ onSubmit }: Readonly<WaitressFormProps>) {
+export function WaitressForm() {
   const {
     register,
     handleSubmit,

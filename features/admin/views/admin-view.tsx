@@ -3,16 +3,10 @@
 import { PageHeader } from "@/components/common/PageHeader";
 import { AdminStats } from "@/features/admin/components/admin-stats";
 import { LatestOrders } from "@/features/admin/components/latest-orders";
-import { useDataStore } from "@/store/useDataStore";
 import { useHydrated } from "@/hooks/useHydrated";
 
 export default function AdminView() {
   const hydrated = useHydrated();
-  const orders = useDataStore((s) => s.orders);
-  const waitresses = useDataStore((s) => s.waitresses);
-
-  const served = orders.filter((o) => o.status === "servie").length;
-  const pending = orders.filter((o) => o.status !== "servie").length;
   
 
   if (!hydrated) {
@@ -32,13 +26,13 @@ export default function AdminView() {
       />
 
       <AdminStats
-        ordersCount={orders.length}
-        servedCount={served}
-        pendingCount={pending}
-        onlineWaitresses={waitresses.filter((w) => w.online).length}
+        ordersCount={5}
+        servedCount={1}
+        pendingCount={2}
+        onlineWaitresses={4}
       />
 
-      <LatestOrders orders={orders} />
+      <LatestOrders orders={[]} />
     </div>
   );
 }

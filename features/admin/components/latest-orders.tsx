@@ -1,6 +1,6 @@
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { formatTime } from "@/utils/format";
-import type { Order } from "@/type";
+import { Order } from "../types/order";
 
 interface LatestOrdersProps {
   orders: Order[];
@@ -24,13 +24,11 @@ function OrderListItem({ order }: Readonly<{ order: Order }>) {
 }
 
 export function LatestOrders({ orders, limit = 6 }: Readonly<LatestOrdersProps>) {
-  const latest = [...orders].sort((a, b) => b.createdAt - a.createdAt).slice(0, limit);
-
   return (
     <section className="surface-card p-6 mt-4">
       <h2 className="text-display text-2xl font-medium text-foreground">Dernières commandes</h2>
       <ul className="mt-5 divide-y divide-border">
-        {latest.map((order, index) => (
+        {orders.map((order, index) => (
           <OrderListItem key={index + 1} order={order} />
         ))}
       </ul>
