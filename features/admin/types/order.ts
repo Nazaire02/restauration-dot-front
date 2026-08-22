@@ -10,6 +10,7 @@ export type Waitress = {
 };
 
 export type Order = {
+  id: string;
   table:number;
   chair: number;
   items: {

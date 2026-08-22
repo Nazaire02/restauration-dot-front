@@ -4,19 +4,15 @@ import { motion } from "motion/react";
 import { Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { useElapsedTime } from "@/hooks/useElapsedTime";
 import { formatTime } from "@/utils/format";
-import type { Order } from "@/type";
+import { Order } from "@/features/admin/types/order"
 
 interface ServeuseOrderCardProps {
   order: Order;
-  onTake: () => void;
-  onServe: () => void;
+  onServe: (id: string) => void;
 }
 
-export function ServeuseOrderCard({ order, onTake, onServe }: Readonly<ServeuseOrderCardProps>) {
-  const elapsed = useElapsedTime(order.createdAt);
-
+export function ServeuseOrderCard({ order, onServe }: Readonly<ServeuseOrderCardProps>) {
   return (
     <motion.article
       layout
@@ -33,7 +29,7 @@ export function ServeuseOrderCard({ order, onTake, onServe }: Readonly<ServeuseO
           </h2>
           <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="size-4 shrink-0" aria-hidden />
-            {formatTime(order.createdAt)} · {elapsed}
+            {formatTime(order.createdAt)}
           </p>
         </div>
         <StatusBadge status={order.status} className="shrink-0" />
@@ -49,15 +45,7 @@ export function ServeuseOrderCard({ order, onTake, onServe }: Readonly<ServeuseO
       </ul>
 
       <div className="mt-auto flex flex-wrap gap-2">
-        <Button
-          variant="outline"
-          className="min-h-11 flex-1 rounded-full"
-          disabled={order.status === "en_cours"}
-          onClick={onTake}
-        >
-          Prendre en charge
-        </Button>
-        <Button className="min-h-11 flex-1 rounded-full" onClick={onServe}>
+        <Button className="min-h-11 flex-1 rounded-full" onClick={()=> onServe(order.id)}>
           Marquer servie
         </Button>
       </div>
